@@ -53,6 +53,12 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Extended design tokens */
+    --hero-gradient-start: 210 40% 98%;
+    --hero-gradient-end: 210 40% 96%;
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--ring) / 0.25);
+    --shadow-glow: 0 0 40px hsl(var(--ring) / 0.35);
   }
 
   .dark {
@@ -91,15 +97,39 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Extended design tokens (dark) */
+    --hero-gradient-start: 222.2 24% 12%;
+    --hero-gradient-end: 222.2 20% 8%;
+    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 40px hsl(var(--sidebar-primary) / 0.35);
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer utilities {
+  .glass-card {
+    background-color: hsl(var(--background) / 0.6);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: var(--shadow-elegant);
   }
 
-  body {
-    @apply bg-background text-foreground;
+  .hover-glow {
+    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+  }
+  .hover-glow:hover {
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
+  }
+
+  .bg-hero {
+    background-image:
+      radial-gradient(600px 300px at 50% -10%, hsl(var(--hero-gradient-start)), transparent),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--accent) / 0.25));
+  }
+
+  .radial-spotlight {
+    background: radial-gradient(500px circle at var(--x, 50%) var(--y, 50%), hsl(var(--ring) / 0.08), transparent 40%);
   }
 }
