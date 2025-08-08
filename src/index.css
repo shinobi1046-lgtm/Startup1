@@ -59,6 +59,10 @@ All colors MUST be HSL.
     --hero-gradient-end: 210 40% 96%;
     --shadow-elegant: 0 10px 30px -10px hsl(var(--ring) / 0.25);
     --shadow-glow: 0 0 40px hsl(var(--ring) / 0.35);
+    /* Subtle tints for monochrome accents */
+    --tint-a: 210 30% 96%;
+    --tint-b: 220 28% 94%;
+    --tint-c: 230 26% 92%;
   }
 
   .dark {
@@ -103,6 +107,9 @@ All colors MUST be HSL.
     --hero-gradient-end: 222.2 20% 8%;
     --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.5);
     --shadow-glow: 0 0 40px hsl(var(--sidebar-primary) / 0.35);
+    --tint-a: 222 20% 16%;
+    --tint-b: 222 18% 14%;
+    --tint-c: 222 16% 12%;
   }
 }
 
@@ -132,4 +139,12 @@ All colors MUST be HSL.
   .radial-spotlight {
     background: radial-gradient(500px circle at var(--x, 50%) var(--y, 50%), hsl(var(--ring) / 0.08), transparent 40%);
   }
-}
+
+  /* Subtle tint backgrounds */
+  .tint-a { background-color: hsl(var(--tint-a) / 0.7); }
+  .tint-b { background-color: hsl(var(--tint-b) / 0.7); }
+  .tint-c { background-color: hsl(var(--tint-c) / 0.7); }
+
+  /* Hover scale utility */
+  .hover-scale{ transition: transform .2s ease; }
+  .hover-scale:hover{ transform: translateY(-1px) scale(1.02); }

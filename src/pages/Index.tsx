@@ -4,21 +4,39 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import heroImage from "@/assets/hero-automation.jpg";
 import { Link } from "react-router-dom";
-import { 
+import {
   Mail, CalendarRange, FileSpreadsheet, FileText, BarChart3, FolderCog,
   Inbox, CheckCircle2, Workflow
 } from "lucide-react";
 import { useCallback } from "react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-const demos = [
-  { title: "Forms → Sheets → Gmail", desc: "Capture leads and auto‑send personalized follow‑ups.", icon: Mail },
-  { title: "Sheets → Docs → PDF → Gmail", desc: "Generate quotes/invoices as PDFs and email them.", icon: FileText },
-  { title: "Scheduled KPI Dashboards", desc: "Auto‑refresh dashboards and email summaries.", icon: BarChart3 },
-  { title: "Calendar Workflows", desc: "Bookings, reminders, and post‑meeting follow‑ups.", icon: CalendarRange },
-  { title: "Drive Automation", desc: "Auto‑sort, rename, and set permissions on files.", icon: FolderCog },
-  { title: "Gmail Parsing", desc: "Extract data from emails into Sheets + labeling.", icon: Inbox },
-  { title: "Approval Flows", desc: "One‑click approve/deny via email/Chat.", icon: CheckCircle2 },
-  { title: "Slides Auto‑Reports", desc: "Build decks from Sheets data on a schedule.", icon: Workflow },
+// Demo preview assets
+import imgFormsSheets from "@/assets/demos/forms-sheets-gmail.jpg";
+import imgSheetsDocs from "@/assets/demos/sheets-docs-pdf-gmail.jpg";
+import imgKpi from "@/assets/demos/kpi-dashboards.jpg";
+import imgCalendar from "@/assets/demos/calendar-workflows.jpg";
+import imgDrive from "@/assets/demos/drive-automation.jpg";
+import imgGmail from "@/assets/demos/gmail-parsing.jpg";
+import imgApproval from "@/assets/demos/approval-flows.jpg";
+import imgSlides from "@/assets/demos/slides-auto-report.jpg";
+
+interface DemoItem {
+  title: string;
+  desc: string;
+  icon: React.ComponentType<{ className?: string }>;
+  img: string;
+}
+
+const demos: DemoItem[] = [
+  { title: "Forms → Sheets → Gmail", desc: "Capture leads and auto‑send personalized follow‑ups.", icon: Mail, img: imgFormsSheets },
+  { title: "Sheets → Docs → PDF → Gmail", desc: "Generate quotes/invoices as PDFs and email them.", icon: FileText, img: imgSheetsDocs },
+  { title: "Scheduled KPI Dashboards", desc: "Auto‑refresh dashboards and email summaries.", icon: BarChart3, img: imgKpi },
+  { title: "Calendar Workflows", desc: "Bookings, reminders, and post‑meeting follow‑ups.", icon: CalendarRange, img: imgCalendar },
+  { title: "Drive Automation", desc: "Auto‑sort, rename, and set permissions on files.", icon: FolderCog, img: imgDrive },
+  { title: "Gmail Parsing", desc: "Extract data from emails into Sheets + labeling.", icon: Inbox, img: imgGmail },
+  { title: "Approval Flows", desc: "One‑click approve/deny via email/Chat.", icon: CheckCircle2, img: imgApproval },
+  { title: "Slides Auto‑Reports", desc: "Build decks from Sheets data on a schedule.", icon: Workflow, img: imgSlides },
 ];
 
 const Index = () => {
@@ -44,12 +62,9 @@ const Index = () => {
 
       {/* Hero */}
       <section className="relative bg-hero">
-        <div
-          className="radial-spotlight"
-          onMouseMove={handleMouseMove}
-        >
+        <div className="radial-spotlight" onMouseMove={handleMouseMove}>
           <div className="container mx-auto grid lg:grid-cols-2 gap-8 py-16 md:py-24 items-center">
-            <div>
+            <div className="animate-fade-in">
               <Badge variant="secondary" className="mb-4">Google Workspace Automation</Badge>
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                 Automate Google Workspace with Apps Script + AI
@@ -58,15 +73,15 @@ const Index = () => {
                 We build high‑impact automations for HR, Finance, Sales, and Operations teams using Google Apps Script—so your team saves hours every week.
               </p>
               <div className="flex flex-wrap gap-3">
-                <Button asChild variant="hero">
+                <Button asChild variant="hero" className="hover-scale">
                   <Link to="/schedule">Book a 30‑min call</Link>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="hover-scale">
                   <a href="#demos">Explore demos</a>
                 </Button>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative animate-scale-in">
               <img
                 src={heroImage}
                 alt="Glassy, light 3D abstract background representing automation"
@@ -78,7 +93,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Benefits */}
+      {/* Benefits with light tints */}
       <section className="container mx-auto py-12 md:py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
@@ -86,8 +101,8 @@ const Index = () => {
             { title: "Finance Ops", desc: "Quotes, invoices, reconciliations, monthly reports." },
             { title: "Sales Automation", desc: "Lead intake, follow‑ups, proposals, reminders." },
             { title: "Operations", desc: "Docs, Drive, and calendar workflows at scale." },
-          ].map((b) => (
-            <Card key={b.title} className="p-5 glass-card hover-glow">
+          ].map((b, i) => (
+            <Card key={b.title} className={`p-5 hover-glow hover-scale ${i % 3 === 0 ? 'tint-a' : i % 3 === 1 ? 'tint-b' : 'tint-c'} rounded-lg`}>
               <h3 className="font-semibold mb-1">{b.title}</h3>
               <p className="text-sm text-muted-foreground">{b.desc}</p>
             </Card>
@@ -95,25 +110,32 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Demos */}
+      {/* Demos with hover previews */}
       <section id="demos" className="container mx-auto py-12 md:py-16">
         <div className="mb-8">
           <h2 className="text-3xl font-semibold tracking-tight">What we can automate</h2>
-          <p className="text-muted-foreground mt-2 max-w-2xl">Real examples built with Apps Script and Google Workspace APIs.</p>
+          <p className="text-muted-foreground mt-2 max-w-2xl">Hover a card to preview an example screenshot. Videos can be added later.</p>
         </div>
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {demos.map(({ title, desc, icon: Icon }) => (
-            <Card key={title} className="p-6 glass-card hover-glow h-full">
-              <div className="flex items-start gap-4">
-                <div className="size-10 rounded-md bg-accent flex items-center justify-center">
-                  <Icon className="size-5" />
-                </div>
-                <div>
-                  <h3 className="font-semibold leading-tight">{title}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{desc}</p>
-                </div>
-              </div>
-            </Card>
+          {demos.map(({ title, desc, icon: Icon, img }, idx) => (
+            <HoverCard key={title}>
+              <HoverCardTrigger asChild>
+                <Card className="p-6 glass-card hover-glow hover-scale h-full cursor-pointer">
+                  <div className="flex items-start gap-4">
+                    <div className={`size-10 rounded-md flex items-center justify-center ${idx % 3 === 0 ? 'tint-a' : idx % 3 === 1 ? 'tint-b' : 'tint-c'}`}>
+                      <Icon className="size-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold leading-tight">{title}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{desc}</p>
+                    </div>
+                  </div>
+                </Card>
+              </HoverCardTrigger>
+              <HoverCardContent side="top" align="center" className="w-[360px] md:w-[420px] p-0 glass-card animate-fade-in">
+                <img src={img} alt={`${title} preview`} className="rounded-md w-full h-auto" loading="lazy" />
+              </HoverCardContent>
+            </HoverCard>
           ))}
         </div>
       </section>
@@ -129,8 +151,8 @@ const Index = () => {
             { step: "1", title: "Discovery call", desc: "Understand your workflow and metrics of success." },
             { step: "2", title: "Prototype", desc: "We build a small slice you can try within days." },
             { step: "3", title: "Automate", desc: "Production‑grade build, docs, and training." },
-          ].map((s) => (
-            <Card key={s.step} className="p-6 glass-card hover-glow text-center">
+          ].map((s, i) => (
+            <Card key={s.step} className={`p-6 glass-card hover-glow text-center hover-scale ${i % 3 === 0 ? 'tint-a' : i % 3 === 1 ? 'tint-b' : 'tint-c'}`}>
               <div className="mx-auto mb-2 size-10 rounded-full bg-secondary flex items-center justify-center font-semibold">
                 {s.step}
               </div>
@@ -149,8 +171,8 @@ const Index = () => {
             <p className="text-muted-foreground">No lock‑in. Clear outcomes. Fast delivery.</p>
           </div>
           <div className="flex gap-3">
-            <Button asChild variant="hero"><Link to="/schedule">Book a 30‑min call</Link></Button>
-            <Button asChild variant="outline"><Link to="/contact">Contact us</Link></Button>
+            <Button asChild variant="hero" className="hover-scale"><Link to="/schedule">Book a 30‑min call</Link></Button>
+            <Button asChild variant="outline" className="hover-scale"><Link to="/contact">Contact us</Link></Button>
           </div>
         </div>
       </section>
