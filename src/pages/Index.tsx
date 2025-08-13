@@ -8,8 +8,14 @@ import {
   Mail, CalendarRange, FileSpreadsheet, FileText, BarChart3, FolderCog,
   Inbox, CheckCircle2, Workflow
 } from "lucide-react";
-import { useCallback } from "react";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { useCallback, useState } from "react";
+import { AutomationDialog } from "@/components/demos/AutomationDialog";
+import { 
+  FormsToGmailAnimation, 
+  SheetsToPdfAnimation, 
+  KpiDashboardAnimation, 
+  SimpleWorkflowAnimation 
+} from "@/components/demos/AutomationAnimations";
 
 // Demo preview assets
 import imgFormsSheets from "@/assets/demos/forms-sheets-gmail.jpg";
@@ -26,21 +32,210 @@ interface DemoItem {
   desc: string;
   icon: React.ComponentType<{ className?: string }>;
   img: string;
+  animation: React.ReactNode;
+  metrics: {
+    timeSaved: string;
+    efficiency: number;
+    automationLevel: number;
+    monthlyHours: string;
+  };
+  zapierComparison: {
+    feature: string;
+    apps: string;
+    advantages: string[];
+  };
 }
 
 const demos: DemoItem[] = [
-  { title: "Forms → Sheets → Gmail", desc: "Capture leads and auto‑send personalized follow‑ups.", icon: Mail, img: imgFormsSheets },
-  { title: "Sheets → Docs → PDF → Gmail", desc: "Generate quotes/invoices as PDFs and email them.", icon: FileText, img: imgSheetsDocs },
-  { title: "Scheduled KPI Dashboards", desc: "Auto‑refresh dashboards and email summaries.", icon: BarChart3, img: imgKpi },
-  { title: "Calendar Workflows", desc: "Bookings, reminders, and post‑meeting follow‑ups.", icon: CalendarRange, img: imgCalendar },
-  { title: "Drive Automation", desc: "Auto‑sort, rename, and set permissions on files.", icon: FolderCog, img: imgDrive },
-  { title: "Gmail Parsing", desc: "Extract data from emails into Sheets + labeling.", icon: Inbox, img: imgGmail },
-  { title: "Approval Flows", desc: "One‑click approve/deny via email/Chat.", icon: CheckCircle2, img: imgApproval },
-  { title: "Slides Auto‑Reports", desc: "Build decks from Sheets data on a schedule.", icon: Workflow, img: imgSlides },
+  { 
+    title: "Forms → Sheets → Gmail", 
+    desc: "Capture leads and auto‑send personalized follow‑ups.", 
+    icon: Mail, 
+    img: imgFormsSheets,
+    animation: <FormsToGmailAnimation />,
+    metrics: {
+      timeSaved: "15 min → 30 sec",
+      efficiency: 97,
+      automationLevel: 95,
+      monthlyHours: "40+ hrs"
+    },
+    zapierComparison: {
+      feature: "Single Apps Script with native Google integrations",
+      apps: "Requires Google Forms + Sheets + Gmail + 2-3 Zapier steps",
+      advantages: [
+        "No monthly subscription fees",
+        "Faster execution (no API delays)",
+        "Advanced email templating with Google Docs",
+        "Custom business logic and data validation"
+      ]
+    }
+  },
+  { 
+    title: "Sheets → Docs → PDF → Gmail", 
+    desc: "Generate quotes/invoices as PDFs and email them.", 
+    icon: FileText, 
+    img: imgSheetsDocs,
+    animation: <SheetsToPdfAnimation />,
+    metrics: {
+      timeSaved: "25 min → 2 min",
+      efficiency: 92,
+      automationLevel: 88,
+      monthlyHours: "60+ hrs"
+    },
+    zapierComparison: {
+      feature: "Native Google Workspace PDF generation",
+      apps: "Requires Sheets + Docs + PDF converter + Gmail + storage",
+      advantages: [
+        "Perfect Google Docs formatting",
+        "No file size limits",
+        "Custom PDF templates",
+        "Automatic version control"
+      ]
+    }
+  },
+  { 
+    title: "Scheduled KPI Dashboards", 
+    desc: "Auto‑refresh dashboards and email summaries.", 
+    icon: BarChart3, 
+    img: imgKpi,
+    animation: <KpiDashboardAnimation />,
+    metrics: {
+      timeSaved: "2 hrs → 5 min",
+      efficiency: 96,
+      automationLevel: 98,
+      monthlyHours: "30+ hrs"
+    },
+    zapierComparison: {
+      feature: "Built-in Google Sheets charts and time-based triggers",
+      apps: "Requires data source + BI tool + scheduler + email service",
+      advantages: [
+        "Real-time Google Sheets integration",
+        "Custom chart generation",
+        "No data export/import delays",
+        "Advanced conditional formatting"
+      ]
+    }
+  },
+  { 
+    title: "Calendar Workflows", 
+    desc: "Bookings, reminders, and post‑meeting follow‑ups.", 
+    icon: CalendarRange, 
+    img: imgCalendar,
+    animation: <SimpleWorkflowAnimation icon={CalendarRange} steps={["New booking", "Auto-confirmation", "Reminder sent", "Follow-up email"]} />,
+    metrics: {
+      timeSaved: "10 min → 1 min",
+      efficiency: 90,
+      automationLevel: 85,
+      monthlyHours: "25+ hrs"
+    },
+    zapierComparison: {
+      feature: "Native Google Calendar API integration",
+      apps: "Requires Calendar + Email service + Scheduler + Forms",
+      advantages: [
+        "Deep calendar integration",
+        "Meeting link generation",
+        "Attendee management",
+        "Timezone handling"
+      ]
+    }
+  },
+  { 
+    title: "Drive Automation", 
+    desc: "Auto‑sort, rename, and set permissions on files.", 
+    icon: FolderCog, 
+    img: imgDrive,
+    animation: <SimpleWorkflowAnimation icon={FolderCog} steps={["File uploaded", "Auto-sorting", "Permissions set", "Team notified"]} />,
+    metrics: {
+      timeSaved: "5 min → 10 sec",
+      efficiency: 97,
+      automationLevel: 94,
+      monthlyHours: "20+ hrs"
+    },
+    zapierComparison: {
+      feature: "Full Google Drive API access with batch operations",
+      apps: "Requires Drive + File management service + Permissions tool",
+      advantages: [
+        "Bulk file operations",
+        "Advanced permission management",
+        "Custom folder structures",
+        "File content analysis"
+      ]
+    }
+  },
+  { 
+    title: "Gmail Parsing", 
+    desc: "Extract data from emails into Sheets + labeling.", 
+    icon: Inbox, 
+    img: imgGmail,
+    animation: <SimpleWorkflowAnimation icon={Inbox} steps={["Email received", "Data extracted", "Added to Sheets", "Email labeled"]} />,
+    metrics: {
+      timeSaved: "8 min → 30 sec",
+      efficiency: 94,
+      automationLevel: 91,
+      monthlyHours: "35+ hrs"
+    },
+    zapierComparison: {
+      feature: "Advanced Gmail API with custom parsing logic",
+      apps: "Requires Gmail + Parser + Sheets + Label manager",
+      advantages: [
+        "Complex email parsing",
+        "Custom extraction rules",
+        "Attachment handling",
+        "Thread management"
+      ]
+    }
+  },
+  { 
+    title: "Approval Flows", 
+    desc: "One‑click approve/deny via email/Chat.", 
+    icon: CheckCircle2, 
+    img: imgApproval,
+    animation: <SimpleWorkflowAnimation icon={CheckCircle2} steps={["Request submitted", "Approver notified", "Decision made", "Status updated"]} />,
+    metrics: {
+      timeSaved: "20 min → 1 min",
+      efficiency: 95,
+      automationLevel: 89,
+      monthlyHours: "50+ hrs"
+    },
+    zapierComparison: {
+      feature: "Google Apps Script with Gmail/Chat integration",
+      apps: "Requires Forms + Approval tool + Email + Notifications",
+      advantages: [
+        "Custom approval logic",
+        "Email & Chat integration",
+        "Audit trail in Sheets",
+        "Role-based permissions"
+      ]
+    }
+  },
+  { 
+    title: "Slides Auto‑Reports", 
+    desc: "Build decks from Sheets data on a schedule.", 
+    icon: Workflow, 
+    img: imgSlides,
+    animation: <SimpleWorkflowAnimation icon={Workflow} steps={["Data updated", "Charts generated", "Slides created", "Report shared"]} />,
+    metrics: {
+      timeSaved: "3 hrs → 15 min",
+      efficiency: 92,
+      automationLevel: 87,
+      monthlyHours: "45+ hrs"
+    },
+    zapierComparison: {
+      feature: "Native Google Slides API with chart generation",
+      apps: "Requires Sheets + Presentation tool + Scheduler + Sharing",
+      advantages: [
+        "Google Slides template system",
+        "Dynamic chart embedding",
+        "Auto-formatting",
+        "Brand consistency"
+      ]
+    }
+  },
 ];
 
 const Index = () => {
   const canonical = typeof window !== 'undefined' ? window.location.href : '/';
+  const [selectedDemo, setSelectedDemo] = useState<DemoItem | null>(null);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -110,34 +305,48 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Demos with hover previews */}
+      {/* Interactive Demos */}
       <section id="demos" className="container mx-auto py-12 md:py-16">
         <div className="mb-8">
           <h2 className="text-3xl font-semibold tracking-tight">What we can automate</h2>
-          <p className="text-muted-foreground mt-2 max-w-2xl">Hover a card to preview an example screenshot. Videos can be added later.</p>
+          <p className="text-muted-foreground mt-2 max-w-2xl">Click any card to see animations, metrics, and how we compare to Zapier.</p>
         </div>
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {demos.map(({ title, desc, icon: Icon, img }, idx) => (
-            <HoverCard key={title}>
-              <HoverCardTrigger asChild>
-                <Card className="p-6 glass-card hover-glow hover-scale h-full cursor-pointer">
-                  <div className="flex items-start gap-4">
-                    <div className={`size-10 rounded-md flex items-center justify-center ${idx % 3 === 0 ? 'tint-a' : idx % 3 === 1 ? 'tint-b' : 'tint-c'}`}>
-                      <Icon className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold leading-tight">{title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{desc}</p>
-                    </div>
+          {demos.map((demo, idx) => (
+            <Card 
+              key={demo.title}
+              className="p-6 glass-card hover-glow hover-scale h-full cursor-pointer transition-all duration-300"
+              onClick={() => setSelectedDemo(demo)}
+            >
+              <div className="flex items-start gap-4">
+                <div className={`size-10 rounded-md flex items-center justify-center ${idx % 3 === 0 ? 'tint-a' : idx % 3 === 1 ? 'tint-b' : 'tint-c'}`}>
+                  <demo.icon className="size-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold leading-tight">{demo.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{demo.desc}</p>
+                  <div className="mt-3 flex items-center gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {demo.metrics.timeSaved}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {demo.metrics.efficiency}% efficient
+                    </Badge>
                   </div>
-                </Card>
-              </HoverCardTrigger>
-              <HoverCardContent side="top" align="center" className="w-[360px] md:w-[420px] p-0 glass-card animate-fade-in">
-                <img src={img} alt={`${title} preview`} className="rounded-md w-full h-auto" loading="lazy" />
-              </HoverCardContent>
-            </HoverCard>
+                </div>
+              </div>
+            </Card>
           ))}
         </div>
+        
+        {/* Automation Dialog */}
+        {selectedDemo && (
+          <AutomationDialog
+            isOpen={!!selectedDemo}
+            onClose={() => setSelectedDemo(null)}
+            demo={selectedDemo}
+          />
+        )}
       </section>
 
       {/* Process */}
