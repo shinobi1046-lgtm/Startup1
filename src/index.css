@@ -148,3 +148,4 @@ All colors MUST be HSL.
   /* Hover scale utility */
   .hover-scale{ transition: transform .2s ease; }
   .hover-scale:hover{ transform: translateY(-1px) scale(1.02); }
+}
