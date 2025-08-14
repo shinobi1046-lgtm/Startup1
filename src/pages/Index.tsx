@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import heroImage from "@/assets/hero-automation.jpg";
+import heroImage from "@/assets/hero-automation-animated.jpg";
 import { Link } from "react-router-dom";
 import {
   Mail, CalendarRange, FileSpreadsheet, FileText, BarChart3, FolderCog,
@@ -16,6 +16,8 @@ import {
   KpiDashboardAnimation, 
   SimpleWorkflowAnimation 
 } from "@/components/demos/AutomationAnimations";
+import { WorkflowButtons } from "@/components/sections/WorkflowButtons";
+import { AIShowcase } from "@/components/sections/AIShowcase";
 
 // Demo preview assets
 import imgFormsSheets from "@/assets/demos/forms-sheets-gmail.jpg";
@@ -39,11 +41,11 @@ interface DemoItem {
     automationLevel: number;
     monthlyHours: string;
   };
-  zapierComparison: {
-    feature: string;
-    apps: string;
-    advantages: string[];
-  };
+    otherPlatformsComparison: {
+      feature: string;
+      apps: string;
+      advantages: string[];
+    };
 }
 
 const demos: DemoItem[] = [
@@ -59,9 +61,9 @@ const demos: DemoItem[] = [
       automationLevel: 95,
       monthlyHours: "40+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Single Apps Script with native Google integrations",
-      apps: "Requires Google Forms + Sheets + Gmail + 2-3 Zapier steps",
+      apps: "Requires Google Forms + Sheets + Gmail + 2-3 automation steps",
       advantages: [
         "No monthly subscription fees",
         "Faster execution (no API delays)",
@@ -82,7 +84,7 @@ const demos: DemoItem[] = [
       automationLevel: 88,
       monthlyHours: "60+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Native Google Workspace PDF generation",
       apps: "Requires Sheets + Docs + PDF converter + Gmail + storage",
       advantages: [
@@ -105,7 +107,7 @@ const demos: DemoItem[] = [
       automationLevel: 98,
       monthlyHours: "30+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Built-in Google Sheets charts and time-based triggers",
       apps: "Requires data source + BI tool + scheduler + email service",
       advantages: [
@@ -128,7 +130,7 @@ const demos: DemoItem[] = [
       automationLevel: 85,
       monthlyHours: "25+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Native Google Calendar API integration",
       apps: "Requires Calendar + Email service + Scheduler + Forms",
       advantages: [
@@ -151,7 +153,7 @@ const demos: DemoItem[] = [
       automationLevel: 94,
       monthlyHours: "20+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Full Google Drive API access with batch operations",
       apps: "Requires Drive + File management service + Permissions tool",
       advantages: [
@@ -174,7 +176,7 @@ const demos: DemoItem[] = [
       automationLevel: 91,
       monthlyHours: "35+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Advanced Gmail API with custom parsing logic",
       apps: "Requires Gmail + Parser + Sheets + Label manager",
       advantages: [
@@ -197,7 +199,7 @@ const demos: DemoItem[] = [
       automationLevel: 89,
       monthlyHours: "50+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Google Apps Script with Gmail/Chat integration",
       apps: "Requires Forms + Approval tool + Email + Notifications",
       advantages: [
@@ -220,7 +222,7 @@ const demos: DemoItem[] = [
       automationLevel: 87,
       monthlyHours: "45+ hrs"
     },
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: "Native Google Slides API with chart generation",
       apps: "Requires Sheets + Presentation tool + Scheduler + Sharing",
       advantages: [
@@ -277,39 +279,31 @@ const Index = () => {
               </div>
             </div>
             <div className="relative animate-scale-in">
+            <div className="relative">
               <img
                 src={heroImage}
-                alt="Glassy, light 3D abstract background representing automation"
-                className="w-full rounded-xl shadow-md glass-card"
+                alt="Dynamic automation workflow with floating Google Workspace icons and flowing data streams"
+                className="w-full rounded-xl shadow-md glass-card animate-scale-in"
                 loading="eager"
               />
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-primary/10 rounded-xl pointer-events-none"></div>
+            </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits with light tints */}
-      <section className="container mx-auto py-12 md:py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { title: "HR Workflows", desc: "Onboarding, leave requests, emails & approvals." },
-            { title: "Finance Ops", desc: "Quotes, invoices, reconciliations, monthly reports." },
-            { title: "Sales Automation", desc: "Lead intake, follow‑ups, proposals, reminders." },
-            { title: "Operations", desc: "Docs, Drive, and calendar workflows at scale." },
-          ].map((b, i) => (
-            <Card key={b.title} className={`p-5 hover-glow hover-scale ${i % 3 === 0 ? 'tint-a' : i % 3 === 1 ? 'tint-b' : 'tint-c'} rounded-lg`}>
-              <h3 className="font-semibold mb-1">{b.title}</h3>
-              <p className="text-sm text-muted-foreground">{b.desc}</p>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {/* 3D Workflow Buttons */}
+      <WorkflowButtons />
+
+      {/* AI Automation Showcase */}
+      <AIShowcase />
 
       {/* Interactive Demos */}
       <section id="demos" className="container mx-auto py-12 md:py-16">
         <div className="mb-8">
           <h2 className="text-3xl font-semibold tracking-tight">What we can automate</h2>
-          <p className="text-muted-foreground mt-2 max-w-2xl">Click any card to see animations, metrics, and how we compare to Zapier.</p>
+          <p className="text-muted-foreground mt-2 max-w-2xl">Click any card to see animations, metrics, and how we compare to other platforms.</p>
         </div>
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {demos.map((demo, idx) => (
@@ -329,7 +323,7 @@ const Index = () => {
                     <Badge variant="secondary" className="text-xs">
                       {demo.metrics.timeSaved}
                     </Badge>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge className="text-xs efficiency-badge">
                       {demo.metrics.efficiency}% efficient
                     </Badge>
                   </div>

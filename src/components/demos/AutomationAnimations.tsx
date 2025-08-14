@@ -13,35 +13,51 @@ export const FormsToGmailAnimation = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-between p-4 min-h-[120px]">
-      <div className={`flex flex-col items-center transition-all duration-500 ${step >= 0 ? 'scale-110 text-primary' : 'scale-100'}`}>
-        <div className="size-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-2">
+    <div className="flex items-center justify-between p-4 min-h-[120px] relative">
+      <div className={`flex flex-col items-center transition-all duration-500 ${step >= 0 ? 'scale-110' : 'scale-100'}`}>
+        <div className={`size-12 rounded-lg flex items-center justify-center mb-2 transition-all duration-500 ${
+          step >= 0 ? 'bg-blue-100 text-blue-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+        }`}>
           📝
         </div>
-        <span className="text-xs text-center">Form<br/>Submission</span>
+        <span className="text-xs text-center font-medium">Form<br/>Submission</span>
+        {step >= 0 && <div className="w-1 h-1 bg-primary rounded-full mt-1 animate-pulse"></div>}
       </div>
       
-      <ArrowRight className={`size-6 transition-all duration-300 ${step >= 1 ? 'text-primary animate-pulse' : 'text-muted-foreground'}`} />
+      <div className={`progress-flow transition-all duration-300 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
+        <ArrowRight className="size-6" />
+      </div>
       
-      <div className={`flex flex-col items-center transition-all duration-500 ${step >= 1 ? 'scale-110 text-primary' : 'scale-100'}`}>
-        <div className="size-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-2">
+      <div className={`flex flex-col items-center transition-all duration-500 ${step >= 1 ? 'scale-110' : 'scale-100'}`}>
+        <div className={`size-12 rounded-lg flex items-center justify-center mb-2 transition-all duration-500 ${
+          step >= 1 ? 'bg-green-100 text-green-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+        }`}>
           <FileSpreadsheet className="size-6" />
         </div>
-        <span className="text-xs text-center">Auto-Added<br/>to Sheets</span>
+        <span className="text-xs text-center font-medium">Auto-Added<br/>to Sheets</span>
+        {step >= 1 && <div className="w-1 h-1 bg-primary rounded-full mt-1 animate-pulse"></div>}
       </div>
       
-      <ArrowRight className={`size-6 transition-all duration-300 ${step >= 2 ? 'text-primary animate-pulse' : 'text-muted-foreground'}`} />
+      <div className={`progress-flow transition-all duration-300 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
+        <ArrowRight className="size-6" />
+      </div>
       
-      <div className={`flex flex-col items-center transition-all duration-500 ${step >= 2 ? 'scale-110 text-primary' : 'scale-100'}`}>
-        <div className="size-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-2">
+      <div className={`flex flex-col items-center transition-all duration-500 ${step >= 2 ? 'scale-110' : 'scale-100'}`}>
+        <div className={`size-12 rounded-lg flex items-center justify-center mb-2 transition-all duration-500 ${
+          step >= 2 ? 'bg-purple-100 text-purple-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+        }`}>
           <Mail className="size-6" />
         </div>
-        <span className="text-xs text-center">Personalized<br/>Email Sent</span>
+        <span className="text-xs text-center font-medium">Personalized<br/>Email Sent</span>
+        {step >= 2 && <div className="w-1 h-1 bg-primary rounded-full mt-1 animate-pulse"></div>}
       </div>
       
       {step === 3 && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <CheckCircle2 className="size-8 text-green-500 animate-bounce" />
+        <div className="absolute inset-0 flex items-center justify-center bg-green-50/50 rounded-lg">
+          <div className="text-center">
+            <CheckCircle2 className="size-8 text-green-500 animate-bounce mx-auto" />
+            <span className="text-xs font-semibold text-green-600 mt-1 block">Workflow Complete!</span>
+          </div>
         </div>
       )}
     </div>
@@ -62,31 +78,53 @@ export const SheetsToPdfAnimation = () => {
   return (
     <div className="space-y-4 p-4 min-h-[120px]">
       <div className="grid grid-cols-4 gap-2">
-        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 0 ? 'scale-105 text-primary' : 'scale-100'}`}>
-          <FileSpreadsheet className="size-8 mb-1" />
-          <span className="text-xs">Data</span>
+        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 0 ? 'scale-105' : 'scale-100'}`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center mb-1 transition-all duration-500 ${
+            step >= 0 ? 'bg-blue-100 text-blue-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+          }`}>
+            <FileSpreadsheet className="size-5" />
+          </div>
+          <span className="text-xs font-medium">Data</span>
+          {step >= 0 && <div className="w-full h-0.5 bg-primary rounded mt-1 progress-flow"></div>}
         </div>
-        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 1 ? 'scale-105 text-primary' : 'scale-100'}`}>
-          <FileText className="size-8 mb-1" />
-          <span className="text-xs">Doc</span>
+        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 1 ? 'scale-105' : 'scale-100'}`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center mb-1 transition-all duration-500 ${
+            step >= 1 ? 'bg-green-100 text-green-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+          }`}>
+            <FileText className="size-5" />
+          </div>
+          <span className="text-xs font-medium">Doc</span>
+          {step >= 1 && <div className="w-full h-0.5 bg-primary rounded mt-1 progress-flow"></div>}
         </div>
-        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 2 ? 'scale-105 text-primary' : 'scale-100'}`}>
-          📄
-          <span className="text-xs">PDF</span>
+        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 2 ? 'scale-105' : 'scale-100'}`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center mb-1 transition-all duration-500 ${
+            step >= 2 ? 'bg-purple-100 text-purple-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+          }`}>
+            📄
+          </div>
+          <span className="text-xs font-medium">PDF</span>
+          {step >= 2 && <div className="w-full h-0.5 bg-primary rounded mt-1 progress-flow"></div>}
         </div>
-        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 3 ? 'scale-105 text-primary' : 'scale-100'}`}>
-          <Mail className="size-8 mb-1" />
-          <span className="text-xs">Email</span>
+        <div className={`flex flex-col items-center transition-all duration-500 ${step >= 3 ? 'scale-105' : 'scale-100'}`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center mb-1 transition-all duration-500 ${
+            step >= 3 ? 'bg-orange-100 text-orange-600 shadow-lg' : 'bg-secondary/50 text-muted-foreground'
+          }`}>
+            <Mail className="size-5" />
+          </div>
+          <span className="text-xs font-medium">Email</span>
+          {step >= 3 && <div className="w-full h-0.5 bg-primary rounded mt-1 progress-flow"></div>}
         </div>
       </div>
       <div className="text-center">
-        <span className="text-xs text-muted-foreground">
-          {step === 0 && "Reading sheet data..."}
-          {step === 1 && "Generating document..."}
-          {step === 2 && "Converting to PDF..."}
-          {step === 3 && "Sending via email..."}
-          {step === 4 && "✓ Quote delivered automatically!"}
-        </span>
+        <div className={`text-xs font-medium px-3 py-1 rounded-full transition-all duration-300 ${
+          step === 4 ? 'bg-green-100 text-green-600' : 'text-muted-foreground'
+        }`}>
+          {step === 0 && "📊 Reading sheet data..."}
+          {step === 1 && "✍️ Generating document..."}
+          {step === 2 && "📄 Converting to PDF..."}
+          {step === 3 && "📧 Sending via email..."}
+          {step === 4 && "✅ Quote delivered automatically!"}
+        </div>
       </div>
     </div>
   );

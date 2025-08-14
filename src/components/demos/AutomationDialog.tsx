@@ -17,7 +17,7 @@ interface AutomationDialogProps {
       automationLevel: number;
       monthlyHours: string;
     };
-    zapierComparison: {
+    otherPlatformsComparison: {
       feature: string;
       apps: string;
       advantages: string[];
@@ -93,27 +93,27 @@ export const AutomationDialog = ({ isOpen, onClose, demo }: AutomationDialogProp
               </div>
             </div>
 
-            {/* Zapier Comparison */}
+            {/* Platform Comparison */}
             <div className="glass-card p-4 rounded-lg space-y-4">
               <h3 className="font-semibold flex items-center gap-2">
                 <CheckCircle2 className="size-4" />
-                vs. Zapier & Similar Platforms
+                vs. Other Automation Platforms
               </h3>
               
               <div className="space-y-3">
                 <div>
                   <p className="text-sm text-muted-foreground mb-2">
-                    <strong>Our Solution:</strong> {demo.zapierComparison.feature}
+                    <strong>Our Solution:</strong> {demo.otherPlatformsComparison.feature}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    <strong>Zapier Requirement:</strong> {demo.zapierComparison.apps}
+                    <strong>Other Platforms:</strong> {demo.otherPlatformsComparison.apps}
                   </p>
                 </div>
                 
                 <div className="pt-2 border-t border-border/50">
                   <p className="text-sm font-medium mb-2">Key Advantages:</p>
                   <ul className="space-y-1">
-                    {demo.zapierComparison.advantages.map((advantage, idx) => (
+                    {demo.otherPlatformsComparison.advantages.map((advantage, idx) => (
                       <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
                         <CheckCircle2 className="size-3 mt-0.5 text-primary flex-shrink-0" />
                         {advantage}
@@ -133,7 +133,7 @@ export const AutomationDialog = ({ isOpen, onClose, demo }: AutomationDialogProp
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-muted-foreground line-through">$50+/month</p>
-                  <p className="text-xs text-muted-foreground">Zapier Premium</p>
+                  <p className="text-xs text-muted-foreground">Other Platforms</p>
                 </div>
               </div>
             </div>

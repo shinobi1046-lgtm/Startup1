@@ -24,7 +24,7 @@ All colors MUST be HSL.
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 200 20% 50%;
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
@@ -55,14 +55,21 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* Extended design tokens */
-    --hero-gradient-start: 210 40% 98%;
-    --hero-gradient-end: 210 40% 96%;
+    --hero-gradient-start: 210 60% 95%;
+    --hero-gradient-end: 220 50% 88%;
+    --hero-gradient-blue: 210 100% 50%;
     --shadow-elegant: 0 10px 30px -10px hsl(var(--ring) / 0.25);
     --shadow-glow: 0 0 40px hsl(var(--ring) / 0.35);
-    /* Subtle tints for monochrome accents */
-    --tint-a: 210 30% 96%;
-    --tint-b: 220 28% 94%;
-    --tint-c: 230 26% 92%;
+    /* Light sky blue tints replacing grey */
+    --tint-a: 200 50% 92%;
+    --tint-b: 210 48% 90%;
+    --tint-c: 220 46% 88%;
+    /* Success colors for efficiency metrics */
+    --success-light: 142 76% 88%;
+    --success: 142 71% 45%;
+    /* 3D button effects */
+    --button-3d-shadow: 0 4px 14px 0 hsl(var(--primary) / 0.39);
+    --button-3d-hover: 0 6px 20px hsl(var(--primary) / 0.23);
   }
 
   .dark {
@@ -82,7 +89,7 @@ All colors MUST be HSL.
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 200 15% 65%;
 
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
@@ -105,11 +112,16 @@ All colors MUST be HSL.
     /* Extended design tokens (dark) */
     --hero-gradient-start: 222.2 24% 12%;
     --hero-gradient-end: 222.2 20% 8%;
+    --hero-gradient-blue: 210 100% 30%;
     --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.5);
     --shadow-glow: 0 0 40px hsl(var(--sidebar-primary) / 0.35);
-    --tint-a: 222 20% 16%;
-    --tint-b: 222 18% 14%;
-    --tint-c: 222 16% 12%;
+    --tint-a: 200 25% 18%;
+    --tint-b: 210 23% 16%;
+    --tint-c: 220 21% 14%;
+    --success-light: 142 50% 25%;
+    --success: 142 71% 45%;
+    --button-3d-shadow: 0 4px 14px 0 hsl(var(--primary) / 0.39);
+    --button-3d-hover: 0 6px 20px hsl(var(--primary) / 0.23);
   }
 }
 
@@ -132,8 +144,9 @@ All colors MUST be HSL.
 
   .bg-hero {
     background-image:
-      radial-gradient(600px 300px at 50% -10%, hsl(var(--hero-gradient-start)), transparent),
-      linear-gradient(180deg, hsl(var(--background)), hsl(var(--accent) / 0.25));
+      radial-gradient(800px 400px at 70% 20%, hsl(var(--hero-gradient-blue) / 0.15), transparent),
+      radial-gradient(600px 300px at 30% 80%, hsl(var(--hero-gradient-blue) / 0.08), transparent),
+      linear-gradient(135deg, hsl(var(--hero-gradient-start)), hsl(var(--hero-gradient-end)));
   }
 
   .radial-spotlight {
@@ -148,4 +161,64 @@ All colors MUST be HSL.
   /* Hover scale utility */
   .hover-scale{ transition: transform .2s ease; }
   .hover-scale:hover{ transform: translateY(-1px) scale(1.02); }
+
+  /* 3D Button Effects */
+  .button-3d {
+    background: linear-gradient(145deg, hsl(var(--background)), hsl(var(--secondary)));
+    box-shadow: var(--button-3d-shadow);
+    border: 1px solid hsl(var(--border));
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .button-3d:hover {
+    box-shadow: var(--button-3d-hover);
+    transform: translateY(-2px);
+  }
+
+  .button-3d::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  .button-3d:hover::before {
+    left: 100%;
+  }
+
+  /* Success highlight for efficiency metrics */
+  .efficiency-badge {
+    background: linear-gradient(135deg, hsl(var(--success-light)), hsl(var(--success) / 0.8));
+    color: hsl(var(--success));
+    border: 1px solid hsl(var(--success) / 0.3);
+    box-shadow: 0 2px 8px hsl(var(--success) / 0.2);
+  }
+
+  /* Animated progress indicator */
+  .progress-flow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-flow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.4), transparent);
+    animation: flow 2s infinite;
+  }
+
+  @keyframes flow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
 }
