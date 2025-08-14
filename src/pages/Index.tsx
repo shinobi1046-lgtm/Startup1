@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import heroImage from "@/assets/hero-automation-animated.jpg";
+import heroImage from "@/assets/hero-automation-dynamic.jpg";
 import { Link } from "react-router-dom";
 import {
   Mail, CalendarRange, FileSpreadsheet, FileText, BarChart3, FolderCog,
@@ -283,10 +283,11 @@ const Index = () => {
               <img
                 src={heroImage}
                 alt="Dynamic automation workflow with floating Google Workspace icons and flowing data streams"
-                className="w-full rounded-xl shadow-md glass-card animate-scale-in"
+                className="w-full rounded-xl shadow-md glass-card animate-scale-in animate-pulse"
                 loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-primary/10 rounded-xl pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-primary/10 rounded-xl pointer-events-none animate-pulse"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent rounded-xl pointer-events-none animate-ping opacity-20"></div>
             </div>
             </div>
           </div>

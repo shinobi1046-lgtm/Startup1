@@ -52,8 +52,8 @@ export const WorkflowButtons = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section className="container mx-auto py-12 md:py-16">
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section className="container mx-auto py-12 md:py-16 relative">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
         {workflows.map((workflow, index) => (
           <Card 
             key={workflow.title}
@@ -78,7 +78,7 @@ export const WorkflowButtons = () => {
                 
                 {/* Tooltip Description */}
                 {hoveredIndex === index && (
-                  <div className="absolute top-full right-0 mt-2 w-64 p-3 glass-card rounded-lg border border-border/50 shadow-lg animate-fade-in z-10">
+                  <div className="absolute top-full right-0 mt-2 w-64 p-3 glass-card rounded-lg border border-border/50 shadow-lg animate-fade-in z-50 bg-background/95 backdrop-blur-sm">
                     <p className="text-sm text-muted-foreground">{workflow.description}</p>
                     <div className="absolute -top-1 right-4 w-2 h-2 bg-background border-l border-t border-border/50 rotate-45"></div>
                   </div>
