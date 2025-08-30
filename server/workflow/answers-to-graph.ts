@@ -12,14 +12,24 @@ export function answersToGraph(prompt: string, answers: Record<string, string>):
   
   // ---- Generate workflow based on detected type ----
   switch (automationType) {
+    case 'ecommerce_automation':
+      return generateEcommerceWorkflow(prompt, answers);
+    case 'crm_automation':
+      return generateCRMWorkflow(prompt, answers);
     case 'drive_backup':
       return generateDriveBackupWorkflow(prompt, answers);
     case 'calendar_notifications':
       return generateCalendarNotificationWorkflow(prompt, answers);
-    case 'slack_automation':
-      return generateSlackAutomationWorkflow(prompt, answers);
+    case 'communication_automation':
+      return generateCommunicationWorkflow(prompt, answers);
     case 'gmail_sheets':
       return generateGmailSheetsWorkflow(prompt, answers);
+    case 'form_processing':
+      return generateFormProcessingWorkflow(prompt, answers);
+    case 'project_management':
+      return generateProjectManagementWorkflow(prompt, answers);
+    case 'email_marketing':
+      return generateEmailMarketingWorkflow(prompt, answers);
     default:
       return generateGenericWorkflow(prompt, answers);
   }
@@ -28,24 +38,85 @@ export function answersToGraph(prompt: string, answers: Record<string, string>):
 function detectAutomationType(prompt: string, answers: Record<string, string>): string {
   const p = prompt.toLowerCase();
   const allAnswers = Object.values(answers).join(' ').toLowerCase();
+  const combined = `${p} ${allAnswers}`;
   
-  // Drive/File operations
-  if (p.includes('drive') && (p.includes('backup') || p.includes('dropbox'))) {
+  console.log(`🔍 Automation detection - Prompt: "${p}"`);
+  console.log(`🔍 Automation detection - Answers: "${allAnswers}"`);
+  console.log(`🔍 Automation detection - Combined: "${combined}"`);
+  
+  // Analyze trigger and destination patterns more intelligently
+  
+  // E-commerce workflows (Shopify, orders, products, payments) - CHECK FIRST
+  if (combined.includes('shopify') || combined.includes('ecommerce') || 
+      combined.includes('stripe') || combined.includes('paypal') || combined.includes('square') ||
+      combined.includes('woocommerce') || combined.includes('bigcommerce') || combined.includes('magento') ||
+      (combined.includes('product') && combined.includes('order')) ||
+      (combined.includes('customer') && (combined.includes('store') || combined.includes('shop'))) ||
+      (combined.includes('payment') && (combined.includes('process') || combined.includes('receive'))) ||
+      (combined.includes('buy') && combined.includes('product')) ||
+      (combined.includes('checkout') || combined.includes('purchase'))) {
+    console.log(`✅ Detected: ecommerce_automation`);
+    return 'ecommerce_automation';
+  }
+  
+  // CRM workflows (Salesforce, HubSpot, Pipedrive, Zoho CRM, Dynamics 365, contacts, leads) - CHECK SECOND  
+  if (combined.includes('salesforce') || combined.includes('hubspot') || 
+      combined.includes('pipedrive') || combined.includes('zoho') || combined.includes('dynamics') ||
+      combined.includes('crm') || 
+      (combined.includes('lead') && (combined.includes('create') || combined.includes('contact'))) ||
+      (combined.includes('customer') && combined.includes('deal')) ||
+      (combined.includes('deal') && (combined.includes('create') || combined.includes('pipeline'))) ||
+      (combined.includes('contact') && (combined.includes('manage') || combined.includes('track')))) {
+    console.log(`✅ Detected: crm_automation`);
+    return 'crm_automation';
+  }
+  
+  // Drive/File backup operations
+  if ((combined.includes('drive') || combined.includes('file')) && 
+      (combined.includes('backup') || combined.includes('dropbox') || combined.includes('upload'))) {
     return 'drive_backup';
   }
   
-  // Calendar operations  
-  if (p.includes('birthday') || p.includes('calendar') || allAnswers.includes('calendar')) {
+  // Calendar operations (birthdays, events, reminders)
+  if (combined.includes('birthday') || combined.includes('calendar') || 
+      combined.includes('event') || combined.includes('reminder') ||
+      combined.includes('schedule') && combined.includes('notification')) {
     return 'calendar_notifications';
   }
   
-  // Slack operations
-  if (p.includes('slack') || allAnswers.includes('slack')) {
-    return 'slack_automation';
+  // Communication workflows (Slack, Teams, Twilio, notifications)
+  if (combined.includes('slack') || combined.includes('teams') || combined.includes('twilio') ||
+      combined.includes('zoom') || combined.includes('webex') || combined.includes('ringcentral') ||
+      combined.includes('chat') || combined.includes('sms') || combined.includes('notification') ||
+      (combined.includes('send') && (combined.includes('message') || combined.includes('text'))) ||
+      (combined.includes('notify') && combined.includes('team'))) {
+    return 'communication_automation';
   }
   
-  // Gmail to Sheets (default for email workflows)
-  if (p.includes('gmail') || p.includes('email') || p.includes('sheet')) {
+  // Gmail to Sheets (email processing)
+  if ((combined.includes('gmail') || combined.includes('email')) && 
+      (combined.includes('sheet') || combined.includes('spreadsheet') || combined.includes('extract'))) {
+    return 'gmail_sheets';
+  }
+  
+  // Form processing
+  if (combined.includes('form') && (combined.includes('submit') || combined.includes('response'))) {
+    return 'form_processing';
+  }
+  
+  // Project management workflows
+  if (combined.includes('jira') || combined.includes('trello') || combined.includes('asana') ||
+      combined.includes('task') && combined.includes('project')) {
+    return 'project_management';
+  }
+  
+  // Email marketing workflows
+  if (combined.includes('mailchimp') || combined.includes('email') && combined.includes('marketing')) {
+    return 'email_marketing';
+  }
+  
+  // Pure email workflows
+  if (combined.includes('gmail') || combined.includes('email') || combined.includes('inbox')) {
     return 'gmail_sheets';
   }
   
@@ -140,47 +211,10 @@ function generateCalendarNotificationWorkflow(prompt: string, answers: Record<st
   };
 }
 
+// This function is replaced by generateCommunicationWorkflow
+// Keeping for backward compatibility but redirecting to the new one
 function generateSlackAutomationWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
-  const trigger = answers.trigger || 'message received';
-  const action = answers.action || 'send notification';
-  
-  const nodes: WorkflowNode[] = [
-    {
-      id: 'trigger-1',
-      type: 'trigger',
-      app: 'slack',
-      name: 'Slack Message Trigger',
-      op: 'slack.message_received',
-      params: {
-        channel: answers.channel || '#general',
-        keywords: answers.keywords || '',
-        userFilter: answers.userFilter || ''
-      }
-    },
-    {
-      id: 'action-1',
-      type: 'action',
-      app: 'slack',
-      name: 'Send Response',
-      op: 'slack.send_message',
-      params: {
-        channel: answers.responseChannel || '#general',
-        message: answers.responseMessage || 'Message received and processed!',
-        threadReply: true
-      }
-    }
-  ];
-
-  const edges: WorkflowEdge[] = [
-    { id: 'edge-1', from: 'trigger-1', to: 'action-1' }
-  ];
-
-  return {
-    id: `wf-${Date.now()}`,
-    nodes,
-    edges,
-    meta: { prompt, answers, automationType: 'slack_automation', trigger, action },
-  };
+  return generateCommunicationWorkflow(prompt, { ...answers, platform: 'slack' });
 }
 
 function generateGmailSheetsWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
@@ -312,4 +346,441 @@ function extractFolderId(path: string): string {
 function extractChannel(destination: string): string {
   const match = destination.match(/#([a-zA-Z0-9-_]+)/);
   return match ? match[1] : 'general';
+}
+
+// New workflow generators for better automation types
+
+function generateEcommerceWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
+  const combined = `${prompt.toLowerCase()} ${Object.values(answers).join(' ').toLowerCase()}`;
+  
+  // Detect e-commerce platform 
+  let ecommerceApp = 'shopify'; // default
+  if (combined.includes('stripe')) ecommerceApp = 'stripe';
+  else if (combined.includes('paypal')) ecommerceApp = 'paypal';
+  else if (combined.includes('square')) ecommerceApp = 'square';
+  else if (combined.includes('woocommerce')) ecommerceApp = 'woocommerce';
+  else if (combined.includes('bigcommerce')) ecommerceApp = 'bigcommerce';
+  else if (combined.includes('magento')) ecommerceApp = 'magento';
+  
+  // Detect trigger and action based on platform
+  let triggerOp, triggerName, triggerParams;
+  let actionApp, actionOp, actionName, actionParams;
+  
+  if (['stripe', 'paypal', 'square'].includes(ecommerceApp)) {
+    // Payment platforms
+    triggerOp = 'payment_success';
+    triggerName = 'Payment Successful';
+    triggerParams = {
+      amount_min: answers.amount_min || 0,
+      currency: answers.currency || 'USD'
+    };
+    
+    // Action: typically log to sheets or send notification
+    if (combined.includes('sheet') || combined.includes('spreadsheet')) {
+      actionApp = 'google-sheets-enhanced';
+      actionOp = 'append_row';
+      actionName = 'Log Payment';
+      actionParams = {
+        spreadsheetId: answers.spreadsheet_id || 'payment_tracker',
+        sheetName: answers.sheet_name || 'payments',
+        values: ['{{amount}}', '{{currency}}', '{{customer_email}}', '{{date}}']
+      };
+    } else {
+      actionApp = 'mailchimp';
+      actionOp = 'add_subscriber';
+      actionName = 'Add to Mailing List';
+      actionParams = {
+        listId: answers.list_id || 'customers',
+        segment: answers.segment || 'paying_customers'
+      };
+    }
+  } else {
+    // E-commerce platforms (WooCommerce, BigCommerce, Magento)
+    triggerOp = 'order_created';
+    triggerName = 'Order Created';
+    triggerParams = {
+      status: answers.order_status || 'processing',
+      min_amount: answers.min_amount || 0
+    };
+    
+    // Action: typically send notification or update
+    if (combined.includes('sms') || combined.includes('twilio')) {
+      actionApp = 'twilio';
+      actionOp = 'send_sms';
+      actionName = 'Send Order SMS';
+      actionParams = {
+        to: answers.phone_number || '{{customer_phone}}',
+        message: answers.message || answers.message_template || 'Your order has been confirmed!'
+      };
+    } else {
+      actionApp = ecommerceApp;
+      actionOp = 'update_inventory';
+      actionName = 'Update Inventory';
+      actionParams = {
+        location_id: answers.location_id || 'primary',
+        adjustment_type: 'decrease'
+      };
+    }
+  }
+  
+  console.log(`🛍️ E-commerce Workflow: ${ecommerceApp} → ${actionApp} (${actionOp})`);
+  
+  const nodes: WorkflowNode[] = [
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      app: ecommerceApp,
+      name: triggerName,
+      op: `${ecommerceApp}.${triggerOp}`,
+      params: triggerParams
+    },
+    {
+      id: 'action-1',
+      type: 'action',
+      app: actionApp,
+      name: actionName,
+      op: `${actionApp}.${actionOp}`,
+      params: actionParams
+    }
+  ];
+
+  const edges: WorkflowEdge[] = [
+    { id: 'edge-1', from: 'trigger-1', to: 'action-1' }
+  ];
+
+  return {
+    id: `wf-${Date.now()}`,
+    nodes,
+    edges,
+    meta: { prompt, answers, automationType: 'ecommerce_automation', ecommerceApp, actionApp, operation: actionOp },
+  };
+}
+
+function generateCRMWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
+  const combined = `${prompt.toLowerCase()} ${Object.values(answers).join(' ').toLowerCase()}`;
+  
+  // Detect CRM platform from prompt and answers
+  let crmApp = 'salesforce'; // default
+  if (combined.includes('pipedrive')) crmApp = 'pipedrive';
+  else if (combined.includes('hubspot')) crmApp = 'hubspot';
+  else if (combined.includes('zoho')) crmApp = 'zoho-crm';
+  else if (combined.includes('dynamics')) crmApp = 'dynamics365';
+  
+  // Detect trigger source
+  let triggerApp = 'forms';
+  let triggerOp = 'form_submit';
+  let triggerName = 'Form Submission';
+  
+  if (combined.includes('google forms')) {
+    triggerApp = 'google-forms';
+    triggerOp = 'google-forms.form_response';
+    triggerName = 'Google Forms Response';
+  } else if (combined.includes('web form') || combined.includes('contact form')) {
+    triggerApp = 'forms';
+    triggerOp = 'forms.form_submit';
+    triggerName = 'Form Submission';
+  }
+  
+  // Detect CRM action
+  let crmAction = 'create_lead';
+  let crmActionName = 'Create Lead';
+  
+  if (combined.includes('create deal') || combined.includes('deal')) {
+    crmAction = 'create_deal';
+    crmActionName = 'Create Deal';
+  } else if (combined.includes('create contact') || combined.includes('contact')) {
+    crmAction = 'create_contact';
+    crmActionName = 'Create Contact';
+  } else if (combined.includes('create opportunity')) {
+    crmAction = 'create_opportunity';
+    crmActionName = 'Create Opportunity';
+  }
+  
+  console.log(`🎯 CRM Workflow: ${triggerApp} → ${crmApp} (${crmAction})`);
+  
+  const nodes: WorkflowNode[] = [
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      app: triggerApp,
+      name: triggerName,
+      op: `${triggerApp}.${triggerOp.split('.').pop()}`,
+      params: {
+        formId: answers.formId || answers.form_id || 'contact_form',
+        fields: answers.fields?.split(',') || ['name', 'email', 'company']
+      }
+    },
+    {
+      id: 'action-1',
+      type: 'action',
+      app: crmApp,
+      name: crmActionName,
+      op: `${crmApp}.${crmAction}`,
+      params: {
+        leadSource: answers.lead_source || 'Website Form',
+        status: answers.status || answers.deal_stage || 'New',
+        pipeline: answers.pipeline || 'Sales',
+        stage: answers.stage || answers.deal_stage || 'qualified'
+      }
+    }
+  ];
+
+  const edges: WorkflowEdge[] = [
+    { id: 'edge-1', from: 'trigger-1', to: 'action-1' }
+  ];
+
+  return {
+    id: `wf-${Date.now()}`,
+    nodes,
+    edges,
+    meta: { prompt, answers, automationType: 'crm_automation', triggerApp, crmApp, action: crmAction },
+  };
+}
+
+function generateCommunicationWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
+  const combined = `${prompt.toLowerCase()} ${Object.values(answers).join(' ').toLowerCase()}`;
+  
+  // Detect communication platform (destination)
+  let commApp = 'slack'; // default
+  if (combined.includes('teams')) commApp = 'microsoft-teams';
+  else if (combined.includes('twilio') || combined.includes('sms')) commApp = 'twilio';
+  else if (combined.includes('zoom')) commApp = 'zoom-enhanced';
+  else if (combined.includes('webex')) commApp = 'webex';
+  else if (combined.includes('ringcentral')) commApp = 'ringcentral';
+  else if (combined.includes('slack')) commApp = 'slack';
+  
+  // Detect trigger source
+  let triggerApp = 'gmail';
+  let triggerOp = 'email_received';
+  let triggerName = 'Email Received';
+  let triggerParams: any = {
+    query: answers.email_filter || 'is:important',
+    labels: answers.labels?.split(',') || ['important']
+  };
+  
+  // Check for CRM triggers
+  if (combined.includes('pipedrive')) {
+    triggerApp = 'pipedrive';
+    triggerOp = 'deal_updated';
+    triggerName = 'Deal Updated';
+    triggerParams = {
+      stage: answers.deal_stage || 'qualified',
+      pipeline: answers.pipeline || 'Sales'
+    };
+  } else if (combined.includes('salesforce')) {
+    triggerApp = 'salesforce';
+    triggerOp = 'record_updated';
+    triggerName = 'Record Updated';
+    triggerParams = {
+      objectType: 'Lead',
+      fields: ['Status', 'Email']
+    };
+  } else if (combined.includes('hubspot')) {
+    triggerApp = 'hubspot';
+    triggerOp = 'contact_updated';
+    triggerName = 'Contact Updated';
+    triggerParams = {
+      properties: ['email', 'lifecyclestage']
+    };
+  } else if (combined.includes('form')) {
+    triggerApp = 'forms';
+    triggerOp = 'form_submit';
+    triggerName = 'Form Submission';
+    triggerParams = {
+      formId: answers.formId || 'contact_form',
+      fields: answers.fields?.split(',') || ['name', 'email', 'company']
+    };
+  }
+  
+  // Detect communication action
+  let commAction = 'send_message';
+  let commActionName = 'Send Notification';
+  let commParams: any = {
+    channel: answers.channel || answers.slack_channel || '#notifications',
+    message: answers.message || 'Notification from automation'
+  };
+  
+  if (commApp === 'twilio') {
+    commAction = 'send_sms';
+    commActionName = 'Send SMS';
+    commParams = {
+      to: answers.phone_number || answers.to_number,
+      message: answers.message || 'SMS notification from automation'
+    };
+  } else if (commApp === 'microsoft-teams') {
+    commAction = 'send_message';
+    commActionName = 'Send Teams Message';
+    commParams = {
+      channelId: answers.teams_channel || answers.channel_id,
+      message: answers.message || 'Teams notification from automation'
+    };
+  }
+  
+  console.log(`📱 Communication Workflow: ${triggerApp} → ${commApp} (${commAction})`);
+  
+  const nodes: WorkflowNode[] = [
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      app: triggerApp,
+      name: triggerName,
+      op: `${triggerApp}.${triggerOp}`,
+      params: triggerParams
+    },
+    {
+      id: 'action-1',
+      type: 'action',
+      app: commApp,
+      name: commActionName,
+      op: `${commApp}.${commAction}`,
+      params: commParams
+    }
+  ];
+
+  const edges: WorkflowEdge[] = [
+    { id: 'edge-1', from: 'trigger-1', to: 'action-1' }
+  ];
+
+  return {
+    id: `wf-${Date.now()}`,
+    nodes,
+    edges,
+    meta: { prompt, answers, automationType: 'communication_automation', triggerApp, commApp, action: commAction },
+  };
+}
+
+function generateFormProcessingWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
+  const formType = answers.form_type || 'google_forms';
+  const destination = answers.destination || 'sheets';
+  
+  const nodes: WorkflowNode[] = [
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      app: 'forms',
+      name: 'Form Submitted',
+      op: 'forms.form_submit',
+      params: {
+        formId: answers.formId || 'contact_form',
+        responseFields: answers.fields?.split(',') || ['all']
+      }
+    },
+    {
+      id: 'transform-1',
+      type: 'transform',
+      app: 'data',
+      name: 'Process Form Data',
+      op: 'data.transform',
+      params: {
+        mappings: answers.field_mappings || {},
+        validation: answers.validation || 'basic'
+      }
+    },
+    {
+      id: 'action-1',
+      type: 'action',
+      app: destination,
+      name: 'Store Data',
+      op: `${destination}.store_data`,
+      params: {
+        destination: answers.storage_destination || 'default',
+        format: 'structured'
+      }
+    }
+  ];
+
+  const edges: WorkflowEdge[] = [
+    { id: 'edge-1', from: 'trigger-1', to: 'transform-1' },
+    { id: 'edge-2', from: 'transform-1', to: 'action-1' }
+  ];
+
+  return {
+    id: `wf-${Date.now()}`,
+    nodes,
+    edges,
+    meta: { prompt, answers, automationType: 'form_processing', formType, destination },
+  };
+}
+
+function generateProjectManagementWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
+  const platform = answers.platform || 'jira';
+  const triggerType = answers.trigger_type || 'issue_created';
+  
+  const nodes: WorkflowNode[] = [
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      app: platform,
+      name: 'Issue Created',
+      op: `${platform}.issue_created`,
+      params: {
+        project: answers.project || 'default',
+        issueType: answers.issue_type || 'all'
+      }
+    },
+    {
+      id: 'action-1',
+      type: 'action',
+      app: 'slack',
+      name: 'Notify Team',
+      op: 'slack.send_message',
+      params: {
+        channel: answers.notification_channel || '#dev-team',
+        message: 'New issue created: {{issue.summary}}'
+      }
+    }
+  ];
+
+  const edges: WorkflowEdge[] = [
+    { id: 'edge-1', from: 'trigger-1', to: 'action-1' }
+  ];
+
+  return {
+    id: `wf-${Date.now()}`,
+    nodes,
+    edges,
+    meta: { prompt, answers, automationType: 'project_management', platform, triggerType },
+  };
+}
+
+function generateEmailMarketingWorkflow(prompt: string, answers: Record<string, string>): WorkflowGraph {
+  const platform = answers.platform || 'mailchimp';
+  const trigger = answers.trigger || 'contact_added';
+  
+  const nodes: WorkflowNode[] = [
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      app: 'forms',
+      name: 'Contact Form Submit',
+      op: 'forms.contact_submit',
+      params: {
+        formId: answers.formId || 'newsletter_signup',
+        fields: ['email', 'name', 'preferences']
+      }
+    },
+    {
+      id: 'action-1',
+      type: 'action',
+      app: platform,
+      name: 'Add to Email List',
+      op: `${platform}.add_subscriber`,
+      params: {
+        listId: answers.list_id || 'newsletter',
+        tags: answers.tags?.split(',') || ['website_signup'],
+        sendWelcomeEmail: true
+      }
+    }
+  ];
+
+  const edges: WorkflowEdge[] = [
+    { id: 'edge-1', from: 'trigger-1', to: 'action-1' }
+  ];
+
+  return {
+    id: `wf-${Date.now()}`,
+    nodes,
+    edges,
+    meta: { prompt, answers, automationType: 'email_marketing', platform, trigger },
+  };
 }
